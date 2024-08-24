@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
+namespace Prueba_Tecnica_BinaSystem.DTO
+{
+    public class ClienteDTO
+    {
+        [Key]
+        public long IdCliente { get; set; }
+        [Required]
+        public string Identificacion { get; set; } = null!;
+        [Required]
+        public string Nombre { get; set; } = null!;
+        [Required]
+        public string Direccion { get; set; } = null!;
+        [Required]
+        public string Telefono { get; set; } = null!;
+        [Required]
+        public string Correo { get; set; } = null!;
+        [JsonIgnore]
+        public ICollection<FacturaDTO> Facturas { get; set; } = new List<FacturaDTO>();
+    }
+}

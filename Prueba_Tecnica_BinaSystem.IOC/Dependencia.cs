@@ -45,6 +45,8 @@ namespace Prueba_Tecnica_BinaSystem.IOC
                 options.Password.RequireLowercase = true;
                 options.Password.RequiredLength = 5;
             }).AddEntityFrameworkStores<Prueba_Tecnica_BinaSystem_Context>().AddDefaultTokenProviders();
+
+
         }
 
        
