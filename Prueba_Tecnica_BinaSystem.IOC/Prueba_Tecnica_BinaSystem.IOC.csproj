@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Prueba_Tecnica_BinaSystem.BLL\Prueba_Tecnica_BinaSystem.BLL.csproj" />
+    <ProjectReference Include="..\Prueba_Tecnica_BinaSystem.DAL\Prueba_Tecnica_BinaSystem.DAL.csproj" />
+    <ProjectReference Include="..\Prueba_Tecnica_BinaSystem.Utility\Prueba_Tecnica_BinaSystem.Utility.csproj" />
+  </ItemGroup>
+
 </Project>
