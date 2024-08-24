@@ -4,7 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Prueba_Tecnica_BinaSystem.BLL.Servicios;
+using Prueba_Tecnica_BinaSystem.BLL.Servicios.Contrato;
+using Prueba_Tecnica_BinaSystem.DAL.Repositorios;
+using Prueba_Tecnica_BinaSystem.DAL.Repositorios.Contrato;
 using Prueba_Tecnica_BinaSystem.Model;
+using Prueba_Tecnica_BinaSystem.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +51,15 @@ namespace Prueba_Tecnica_BinaSystem.IOC
                 options.Password.RequiredLength = 5;
             }).AddEntityFrameworkStores<Prueba_Tecnica_BinaSystem_Context>().AddDefaultTokenProviders();
 
+            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IFacturaRepository, FacturaRepository>();
 
+            services.AddAutoMapper(typeof(AutoMapperProfile));
+            
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IClienteService, ClienteService>();
+            services.AddScoped<IFacturaService, FacturaService>();
+            services.AddScoped<IProductoService, ProductoService>();
         }
 
        

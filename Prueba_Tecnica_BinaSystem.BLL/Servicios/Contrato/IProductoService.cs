@@ -9,7 +9,9 @@ namespace Prueba_Tecnica_BinaSystem.BLL.Servicios.Contrato
 {
     public interface IProductoService
     {
-        Task<List<ProductoDTO>> Lista();
+        Task<List<ProductoDTO>> Lista(string searchTerm);
         Task<ProductoDTO> Crear(ProductoDTO producto);
+
+        Task<ProductoDTO> Obtener(long id);
     }
 }

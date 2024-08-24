@@ -32,10 +32,22 @@ namespace Prueba_Tecnica_BinaSystem.Model
                 .WithOne(a => a.Cliente)
                 .HasForeignKey(a => a.IdCliente);
 
+            modelBuilder.Entity<Cliente>()
+                .HasIndex(c => c.Correo)
+                .IsUnique();
+
+            modelBuilder.Entity<Cliente>()
+                .HasIndex(c => c.Telefono)
+                .IsUnique();
+
             modelBuilder.Entity<Producto>()
                 .HasMany(c => c.Detalles)
                 .WithOne(a => a.Producto)
                 .HasForeignKey(a => a.IdProducto);
+
+            modelBuilder.Entity<Producto>()
+                .HasIndex(c => c.Codigo)
+                .IsUnique();
 
         }
     }

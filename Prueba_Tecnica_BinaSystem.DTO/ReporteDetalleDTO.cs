@@ -9,18 +9,19 @@ using System.Threading.Tasks;
 
 namespace Prueba_Tecnica_BinaSystem.DTO
 {
-    public class DetalleDTO
+    public class ReporteDetalleDTO
     {
         [Key]
         public long IdDetalle {  get; set; }
-        [Required]
         [Column(TypeName = "decimal(10, 0)")]
         public decimal Cantidad { get; set; } = 1;
-        [Required]
         public string UnidadMedida { get; set; } = null!;
-        [Required]
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Precio { get; set; }
-        public long IdProducto { get; set; }
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal IVA { get; set; }
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal Subtotal { get; set; }
+        public virtual ProductoDTO Producto { get; set; } = null!;
     }
 }

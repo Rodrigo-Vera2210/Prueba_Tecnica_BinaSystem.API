@@ -23,6 +23,8 @@ namespace Prueba_Tecnica_BinaSystem.Utility
             
             #region Factura
             CreateMap<Factura,FacturaDTO>().ReverseMap();
+            CreateMap<Factura,ReporteFacturaDTO>();
+
             #endregion
             
             #region Producto
@@ -31,6 +33,7 @@ namespace Prueba_Tecnica_BinaSystem.Utility
             
             #region Detalle
             CreateMap<Detalle,DetalleDTO>().ReverseMap();
+            CreateMap<Detalle, ReporteDetalleDTO>();
             #endregion
         }
     }

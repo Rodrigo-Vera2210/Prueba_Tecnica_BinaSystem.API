@@ -13,14 +13,17 @@ namespace Prueba_Tecnica_BinaSystem.DTO
         [Key]
         public long IdCliente { get; set; }
         [Required]
+        [MinLength(10),MaxLength(13)]
         public string Identificacion { get; set; } = null!;
         [Required]
         public string Nombre { get; set; } = null!;
         [Required]
         public string Direccion { get; set; } = null!;
         [Required]
+        [MinLength(10)]
         public string Telefono { get; set; } = null!;
         [Required]
+        [EmailAddress]
         public string Correo { get; set; } = null!;
         [JsonIgnore]
         public ICollection<FacturaDTO> Facturas { get; set; } = new List<FacturaDTO>();

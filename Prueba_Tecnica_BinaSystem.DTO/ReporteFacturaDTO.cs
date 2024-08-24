@@ -9,19 +9,21 @@ using System.Threading.Tasks;
 
 namespace Prueba_Tecnica_BinaSystem.DTO
 {
-    public class FacturaDTO
+    public class ReporteFacturaDTO
     {
-        [Key]
         public long IdFactura { get; set; }
-        [Required]
-        public string Establecimiento { get; set; } = null!;
-        [Required]
+        public string Establecimiento { get; set; } = null!;        
         public string PuntoEmision { get; set; } = null!;
-        [Required]
         public string NumeroFactura { get; set; } = null!;
-        public DateOnly Fecha { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly Fecha { get; set; }
         public long IdCliente {  get; set; }
-        public ICollection<DetalleDTO> Detalles { get; set; } = null!; 
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal Subtotal { get; set; }
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal TotalIVA { get; set; }
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal Total { get; set; }
+        public ICollection<ReporteDetalleDTO> Detalles { get; set; } = null!; 
 
     }
 }
