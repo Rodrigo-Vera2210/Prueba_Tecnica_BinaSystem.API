@@ -24,11 +24,15 @@ namespace Prueba_Tecnica_BinaSystem.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _facturaService.Crear(factura);
+                if(factura.Fecha < DateOnly.FromDateTime(DateTime.Now))
+                {
+                    var result = await _facturaService.Crear(factura);
 
-                if (result != null) return Ok(result);
+                    if (result != null) return Ok(result);
+                    
+                    return BadRequest(result);
+                }
 
-                return BadRequest(result);
             }
             return BadRequest();
         }

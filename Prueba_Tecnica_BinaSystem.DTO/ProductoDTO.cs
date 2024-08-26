@@ -13,6 +13,7 @@ namespace Prueba_Tecnica_BinaSystem.DTO
         [Key]
         public long IdProducto { get; set; }
         [Required]
+        [Length(5, 5, ErrorMessage = "El codigo debe tener 5 digitos")]
         public string Codigo { get; set; } = null!;
         public string? Descripcion { get; set; }
         [Required]
