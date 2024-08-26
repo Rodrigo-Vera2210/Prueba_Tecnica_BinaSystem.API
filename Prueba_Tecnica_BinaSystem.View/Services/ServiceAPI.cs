@@ -38,6 +38,23 @@ namespace Prueba_Tecnica_BinaSystem.View.Services
             return null;
         }
 
+        public async Task<string> CrearFactura(Factura factura, string access)
+        {
+            var cliente = new HttpClient();
+            cliente.BaseAddress = new Uri(_urlBase);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access);
+
+            using StringContent jsonContent = new(System.Text.Json.JsonSerializer.Serialize(factura), Encoding.UTF8, "application/json");
+
+            var response = await cliente.PostAsync($"api/factura/crear", jsonContent);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return ("Factura Creada");
+            }
+            return null;
+        }
+        
         public async Task<List<Producto>> ObtenerProductos(string access)
         {
             var cliente = new HttpClient();
@@ -58,6 +75,28 @@ namespace Prueba_Tecnica_BinaSystem.View.Services
 
 
         }
+        
+        public async Task<List<ReporteFactura>> ObtenerFacturas(string access)
+        {
+            var cliente = new HttpClient();
+            List<ReporteFactura> resultado = null;
+            cliente.BaseAddress = new Uri(_urlBase);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access);
+
+            var response = await cliente.GetAsync($"api/factura/lista");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json_response = await response.Content.ReadAsStringAsync();
+
+                resultado = JsonConvert.DeserializeObject<List<ReporteFactura>>(json_response);
+            }
+
+            return resultado;
+
+
+        }
+        
         public async Task<List<Cliente>> ObtenerClientes(string access, string term)
         {
             var cliente = new HttpClient();
@@ -85,7 +124,7 @@ namespace Prueba_Tecnica_BinaSystem.View.Services
 
 
         }
-
+        
         public async Task<Cliente> ObtenerCliente(string access, string id)
         {
             var cliente = new HttpClient();
@@ -108,6 +147,7 @@ namespace Prueba_Tecnica_BinaSystem.View.Services
 
 
         }
+
         public async Task<Producto> ObtenerProducto(string access, string id)
         {
             var cliente = new HttpClient();
@@ -129,6 +169,40 @@ namespace Prueba_Tecnica_BinaSystem.View.Services
             return resultado;
 
 
+        }
+
+        public async Task<string> CrearProducto(Producto producto, string access)
+        {
+            var cliente = new HttpClient();
+            cliente.BaseAddress = new Uri(_urlBase);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access);
+
+            using StringContent jsonContent = new(System.Text.Json.JsonSerializer.Serialize(producto), Encoding.UTF8, "application/json");
+
+            var response = await cliente.PostAsync($"api/producto/crear", jsonContent);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return ("Producto Creado");
+            }
+            return null;
+        }
+
+        public async Task<string> CrearCliente(Cliente cliente, string access)
+        {
+            var clienteHttp = new HttpClient();
+            clienteHttp.BaseAddress = new Uri(_urlBase);
+            clienteHttp.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access);
+
+            using StringContent jsonContent = new(System.Text.Json.JsonSerializer.Serialize(cliente), Encoding.UTF8, "application/json");
+
+            var response = await clienteHttp.PostAsync($"api/cliente/crear", jsonContent);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return ("Cliente Creado");
+            }
+            return null;
         }
     }
 }

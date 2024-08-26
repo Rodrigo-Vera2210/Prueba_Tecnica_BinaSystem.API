@@ -20,7 +20,7 @@ namespace Prueba_Tecnica_BinaSystem.View.Models
         [Required]
         public string Direccion { get; set; } = null!;
         [Required]
-        [MinLength(10)]
+        [Length(10, 10, ErrorMessage = "El telefono debe tener 10 digitos")]
         public string Telefono { get; set; } = null!;
         [Required]
         [EmailAddress]

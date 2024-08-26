@@ -26,14 +26,7 @@ namespace Prueba_Tecnica_BinaSystem.View.Controllers
 
         public async Task<IActionResult> Index()
         {
-            Factura factura;
-            if (HttpContext.Session.GetString("factura") != null){
-                factura = JsonConvert.DeserializeObject<Factura>(HttpContext.Session.GetString("factura"));
-            }
-            else
-            {
-                factura = new Factura();
-            }
+            Factura factura = new Factura();
             var result = HttpContext.Session.GetString("access");
             if (result == null)
             {
@@ -48,6 +41,29 @@ namespace Prueba_Tecnica_BinaSystem.View.Controllers
 
             HttpContext.Session.SetString("factura", System.Text.Json.JsonSerializer.Serialize(factura));
             
+            return View(factura);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(Factura factura)
+        {
+            var facturaMemoria = JsonConvert.DeserializeObject<Factura>(HttpContext.Session.GetString("factura"));
+            var result = HttpContext.Session.GetString("access");
+            if (result == null)
+            {
+                return this.RedirectToAction("Login", "Usuario");
+            }
+
+            factura.Detalles = facturaMemoria.Detalles;
+
+            if(factura.Fecha < DateOnly.FromDateTime(DateTime.Now)){
+                var response = await _serviceAPI.CrearFactura(factura, result);
+                if (response != null)
+                {
+                    HttpContext.Session.Remove("factura");
+                    return Redirect("ListaFacturas");
+                }
+            }
             return View(factura);
         }
 
@@ -104,21 +120,81 @@ namespace Prueba_Tecnica_BinaSystem.View.Controllers
             return Json(producto);
         }
 
-
-        public IActionResult CrearProducto()
+        public void AgregarDetalle(string idP, string Cant, string Pre, string U)
         {
-            return View();
+            var factura = JsonConvert.DeserializeObject<Factura>(HttpContext.Session.GetString("factura"));
+            var banRepeticion = 0;
+            foreach (var item in factura.Detalles)
+            {
+                if(long.Parse(idP) == item.IdProducto)
+                {
+                    banRepeticion++;
+                }
+            }
+            if(banRepeticion == 0){
+                factura.Detalles.Add(new Detalle()
+                {
+                    Cantidad = Int32.Parse(Cant),
+                    IdProducto = long.Parse(idP),
+                    Precio = decimal.Parse(Pre),
+                    UnidadMedida = U,
+                });
+            }
+
+            HttpContext.Session.SetString("factura", System.Text.Json.JsonSerializer.Serialize(factura));
         }
 
-        public async Task<IActionResult> ViewListaFacturas()
+        public async Task<IActionResult> ListaFacturas()
         {
             var result = HttpContext.Session.GetString("access");
             if (result == null)
             {
                 return this.RedirectToAction("Login", "Usuario");
             }
-            await _serviceAPI.ObtenerProductos(result);
+            List<ReporteFactura> facturas = await _serviceAPI.ObtenerFacturas(result);
+
+            return View(facturas);
+        }
+
+
+        public IActionResult CrearProducto()
+        {
+
             return View();
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> CrearProducto(Producto producto)
+        {
+            var result = HttpContext.Session.GetString("access");
+            if (result == null)
+            {
+                return this.RedirectToAction("Login", "Usuario");
+            }
+            var reponse = await _serviceAPI.CrearProducto(producto,result);
+            
+            if(reponse == null) return View();
+
+            return RedirectToAction("Index", "Home");
+        }
+        public IActionResult CrearCliente()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CrearCliente(Cliente cliente)
+        {
+            var result = HttpContext.Session.GetString("access");
+            if (result == null)
+            {
+                return this.RedirectToAction("Login", "Usuario");
+            }
+            var reponse = await _serviceAPI.CrearCliente(cliente, result);
+
+            if (reponse == null) return View();
+
+            return RedirectToAction("Index", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -3,29 +3,64 @@
     ViewData["Title"] = "Home Page";
 }
 
+
+
 <div class="container p-10 border border-dark m-5">
-    <h1>Cliente</h1>
-    <form class="d-flex" method="post" action="@Url.Action("ConsultaListaCliente")">
-        <div class="form-floating mb-3 w-50">
-            <input class="form-control w-100" type="text" name="term" id="term" />
-            <label for="term">Ingrese datos del cliente</label>
-        </div>
-        <button class="btn btn-primary" type="submit">Buscar</button>
-    </form>
-    @if(Model != null){
-        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    <h1>Datos</h1>
+    <div class="d-flex justify-content-between">
+
+        <form class="d-flex align-items-center w-50" method="post" action="@Url.Action("ConsultaListaCliente")">
+            <div class="form-floating mb-3 w-75">
+                <input class="form-control w-100" type="text" name="term" id="term" />
+                <label for="term">Ingrese datos del cliente</label>
+            </div>
+            <button class="btn btn-primary mx-2" type="submit">Buscar</button>
+        </form>
+    </div>
+        @if (Model != null)
         {
-            @Html.DropDownListFor(model => model.IdCliente, (IEnumerable<SelectListItem>)Model.Clientes, "Select", new { @class = "form-control", id = "selectCliente"})
+            @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+            {
+                <div class="w-50">
+                    @Html.DropDownListFor(model => model.IdCliente, (IEnumerable<SelectListItem>)Model.Clientes, "Seleccione un cliente", new { @class = "form-control", id = "selectCliente"})
+                </div>
+    
+                <br/>
+
+                <div class="d-flex justify-content-end">
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.Establecimiento,
+                                 new { @class = "form-control", id = "inputEstablecimiento", type = "text", placeholder = "Establecimiento", autofocus = "autofocus" })
+                        @Html.ValidationMessageFor(x => x.Establecimiento, null, new { @class = "text-danger" })
+
+                        <label for="inputEstablecimiento">Establecimiento</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.PuntoEmision,
+                                 new { @class = "form-control", id = "inputPunto", type = "text", placeholder = "Punto de Emision", autofocus = "autofocus" })
+                        @Html.ValidationMessageFor(x => x.PuntoEmision, null, new { @class = "text-danger" })
+
+                        <label for="inputPunto">Punto de Emision</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.NumeroFactura,
+                                 new { @class = "form-control", id = "inputNumeroFactura", type = "text", placeholder = "Numero de Factura", autofocus = "autofocus" })
+                        @Html.ValidationMessageFor(x => x.NumeroFactura, null, new { @class = "text-danger" })
+
+                        <label for="inputNumeroFactura">Numero de Factura</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(x => x.Fecha,
+                                 new { @class = "form-control", id = "inputFecha", type = "date", placeholder = "Fecha", autofocus = "autofocus" })
+                        @Html.ValidationMessageFor(x => x.Fecha, null, new { @class = "text-danger" })
+
+                        <label for="inputNumeroFactura">Fecha</label>
+                    </div>
+                </div>
+
+            <button type="submit" id="btnSave" class="btn btn-primary m-5">Guardar</button>
+            }
         }
-    }
-    <br/>
-    @if(Model.Cliente != null)
-    {
-        <div>
-            <label></label>
-            <input type="text" value="@Model.Cliente.Nombre"/>
-        </div>
-    }
 </div>
 
 <div class="container p-10 border border-dark m-5">
@@ -51,8 +86,8 @@
         <tr>
             <td><p id="codigoProducto"></p></td>
             <td><p id="nombreProducto"></p></td>
-            <td><input type="text" id="txtQty" class="form-control" /></td>
             <td><input type="text" id="txtPrice" class="form-control" /></td>
+            <td><input type="text" id="txtQty" class="form-control" /></td>
             <td><input type="text" id="txtUnidad" class="form-control" /></td>
             <td><input type="button" id="btnAdd" value="Add" class="btn btn-primary" /></td>
         </tr>
@@ -74,8 +109,24 @@
         </tbody>
     </table>
     <br />
-    <input type="button" id="btnSave" value="Save" onclick="Save()" class="btn btn-primary" />
+    <br />
+    <br />
+    <div class="d-flex flex-column align-items-end">
+        <div class="d-flex justify-content-between w-25 py-2 border-top">
+            <label>SubTotal</label>
+            <span class="w-50 pr-2 d-flex">$ <p id="Subtotal"></p></span>
+        </div>
+        <div class="d-flex justify-content-between w-25 py-2 border-top">
+            <label>Iva</label>
+            <span class="w-50 pr-2 d-flex">$ <p id="Iva"></p></span>
+        </div>
+        <div class="d-flex justify-content-between w-25 py-2 border-top">
+            <label>Total</label>
+            <span class="w-50 pr-2 d-flex">$ <p id="Total"></p></span>
+        </div>
+    </div>
 </div>
+
 
 
 
@@ -135,8 +186,27 @@
                 precio = $("#txtPrice").val()
                 cantidad = $("#txtQty").val()
                 subtotal = precio * cantidad
-                AddRow($("#codigoProducto").text(), $("#nombreProducto").text(), precio, cantidad, $("#txtUnidad").val(), (subtotal * 0.15).toFixed(2), subtotal.toFixed(2));
+                iva = subtotal * 0.15;
+
+                console.log(subtotal)
+                console.log($("#Subtotal").text())
+                if ($("#Subtotal").text() != ''){
+                    subtotalF = parseFloat($("#Subtotal").text()) + subtotal
+                    ivaF = parseFloat($("#Iva").text()) + iva
+                    totalF = parseFloat($("#Total").text()) + subtotalF + iva
+                }else{
+                    subtotalF = subtotal
+                    ivaF = iva
+                    totalF = subtotalF + iva
+                }
+                AddRow($("#codigoProducto").text(), $("#nombreProducto").text(), precio, cantidad, $("#txtUnidad").val(), (iva).toFixed(2), subtotal.toFixed(2));
                 AddDetalle(IdProducto, precio, cantidad, $("#txtUnidad").val());
+                $("#Subtotal").text(subtotalF.toFixed(2))
+                $("#Iva").text(ivaF.toFixed(2));
+                $("#Total").text(totalF.toFixed(2));
+
+                $("#codigoProducto").text("");
+                $("#nombreProducto").text("");
                 $("#txtQty").val("");
                 $("#txtPrice").val("");
             });
@@ -192,12 +262,17 @@
                 cell.append(btnRemove);
             };
 
-            function AddDetalle(id, precio, qty) {
+            function AddDetalle(id, precio, qty, unidad) {
                 $.ajax({
-                    url: '@Url.Action("ObtenerProductoPorId")',
+                    url: '@Url.Action("AgregarDetalle")',
                     type: 'GET',
                     contentType: "application/json; charset=utf-8",
-                    data: { id: IdProducto },
+                    data: { 
+                        idP: IdProducto,
+                        Cant: qty,
+                        Pre: precio,
+                        U: unidad
+                    },
                     dataType: "json",
                     success: (data) => {
                         console.log("bien");
