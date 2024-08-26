@@ -1,0 +1,216 @@
+﻿@model Factura
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container p-10 border border-dark m-5">
+    <h1>Cliente</h1>
+    <form class="d-flex" method="post" action="@Url.Action("ConsultaListaCliente")">
+        <div class="form-floating mb-3 w-50">
+            <input class="form-control w-100" type="text" name="term" id="term" />
+            <label for="term">Ingrese datos del cliente</label>
+        </div>
+        <button class="btn btn-primary" type="submit">Buscar</button>
+    </form>
+    @if(Model != null){
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+        {
+            @Html.DropDownListFor(model => model.IdCliente, (IEnumerable<SelectListItem>)Model.Clientes, "Select", new { @class = "form-control", id = "selectCliente"})
+        }
+    }
+    <br/>
+    @if(Model.Cliente != null)
+    {
+        <div>
+            <label></label>
+            <input type="text" value="@Model.Cliente.Nombre"/>
+        </div>
+    }
+</div>
+
+<div class="container p-10 border border-dark m-5">
+    <h1>Detalle</h1>
+    @if (Model != null)
+    {
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+        {
+            @Html.DropDownList("Productos",(IEnumerable<SelectListItem>)Model.Productos, "Select", new { @class = "form-control", id = "selectProductos" })
+        }
+    }
+    <br />
+    
+    <table class="table table-responsive">
+        <tr>
+            <th>Codigo</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td><p id="codigoProducto"></p></td>
+            <td><p id="nombreProducto"></p></td>
+            <td><input type="text" id="txtQty" class="form-control" /></td>
+            <td><input type="text" id="txtPrice" class="form-control" /></td>
+            <td><input type="text" id="txtUnidad" class="form-control" /></td>
+            <td><input type="button" id="btnAdd" value="Add" class="btn btn-primary" /></td>
+        </tr>
+    </table>
+    <table id="tblItems" class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Unidad</th>
+                <th>Iva</th>
+                <th>SubTotal</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+    <input type="button" id="btnSave" value="Save" onclick="Save()" class="btn btn-primary" />
+</div>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+@section Scripts{
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script type="text/javascript">
+        idCliente = 0;
+        IdProducto = 0;
+        $(function () {
+            const model = JSON.parse('@Json.Serialize(Model)')
+            console.log(model)
+
+            $('#selectCliente').select2();
+
+            $('#selectCliente').change(function(){
+                IdCliente = $('#selectCliente').val()
+
+                console.log(IdCliente)
+                $.ajax({
+                    url: '@Url.Action("ObtenerClientePorId")',
+                    type: 'GET',
+                    contentType: "application/json; charset=utf-8",
+                    data: {id: IdCliente},
+                    dataType: "json",
+                    success: () => {
+                        console.log("bien")
+                    },
+                    error: () => {
+                        console.log("mal")
+                    }
+                });
+            })
+
+            $('#selectProductos').change(function () {
+                IdProducto = $('#selectProductos').val()
+
+                $.ajax({
+                    url: '@Url.Action("ObtenerProductoPorId")',
+                    type: 'GET',
+                    contentType: "application/json; charset=utf-8",
+                    data: { id: IdProducto },
+                    dataType: "json",
+                    success: (data) => {
+                        console.log(data.codigo)
+                        document.getElementById("codigoProducto").innerHTML = data.codigo
+                        document.getElementById("nombreProducto").innerHTML = data.descripcion
+                    },
+                    error: () => {
+                        console.log("mal")
+                    }
+                });
+            })
+
+
+            $("#btnAdd").click(function () {
+                precio = $("#txtPrice").val()
+                cantidad = $("#txtQty").val()
+                subtotal = precio * cantidad
+                AddRow($("#codigoProducto").text(), $("#nombreProducto").text(), precio, cantidad, $("#txtUnidad").val(), (subtotal * 0.15).toFixed(2), subtotal.toFixed(2));
+                AddDetalle(IdProducto, precio, cantidad, $("#txtUnidad").val());
+                $("#txtQty").val("");
+                $("#txtPrice").val("");
+            });
+            
+            function Remove(button) {
+                var row = $(button).closest("TR");
+                var name = $("TD", row).eq(0).html();
+                if (confirm("Do you want to delete item : " + name)) {
+                    var table = $("#tblItems")[0];
+                    table.deleteRow(row[0].rowIndex);
+                }
+            };
+
+            function AddRow(codigo, name, precio, qty, unidad, iva, subtotal ) {
+                var tBody = $("#tblItems > TBODY")[0];
+
+                //Add Row.
+                row = tBody.insertRow(-1);
+
+                //Add Name cell.
+                var cell = $(row.insertCell(-1));
+                cell.html(codigo);
+
+                //Add Name cell.
+                cell = $(row.insertCell(-1));
+                cell.html(name);
+
+                //Add Qty cell.
+                cell = $(row.insertCell(-1));
+                cell.html(precio);
+
+                //Add Price cell.
+                cell = $(row.insertCell(-1));
+                cell.html(qty);
+
+                //Add Price cell.
+                cell = $(row.insertCell(-1));
+                cell.html(unidad);
+
+                //Add Price cell.
+                cell = $(row.insertCell(-1));
+                cell.html(iva);
+
+                //Add Amount cell.
+                cell = $(row.insertCell(-1));
+                cell.html(subtotal);
+
+                //Add Button cell.
+                cell = $(row.insertCell(-1));
+                var btnRemove = $("<a>Remove</a>");
+                btnRemove.attr("href", "#");
+                btnRemove.attr("onclick", "Remove(this);");
+                cell.append(btnRemove);
+            };
+
+            function AddDetalle(id, precio, qty) {
+                $.ajax({
+                    url: '@Url.Action("ObtenerProductoPorId")',
+                    type: 'GET',
+                    contentType: "application/json; charset=utf-8",
+                    data: { id: IdProducto },
+                    dataType: "json",
+                    success: (data) => {
+                        console.log("bien");
+                    },
+                    error: () => {
+                        console.log("mal")
+                    }
+                });
+            }
+        });
+
+        // $(document).ready(() => {
+        //     inicio()
+        // })
+    </script>
+}

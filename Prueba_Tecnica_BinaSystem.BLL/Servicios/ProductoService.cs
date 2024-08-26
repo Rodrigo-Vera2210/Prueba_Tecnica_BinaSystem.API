@@ -52,7 +52,6 @@ namespace Prueba_Tecnica_BinaSystem.BLL.Servicios
                              p.Descripcion.Contains(searchTerm));
                 }
 
-                listaProductos = listaProductos.Take(5);
 
                 return _mapper.Map<List<ProductoDTO>>(listaProductos.ToList());
             }
