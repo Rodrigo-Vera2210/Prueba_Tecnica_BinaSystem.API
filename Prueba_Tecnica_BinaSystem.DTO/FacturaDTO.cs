@@ -22,7 +22,7 @@ namespace Prueba_Tecnica_BinaSystem.DTO
         [Required]
         [Length(8, 8, ErrorMessage = "El codigo debe tener 8 digitos")]
         public string NumeroFactura { get; set; } = null!;
-        [Range(typeof(DateTime), "1/2/1955", "31/8/2024",
+        [Range(typeof(DateOnly), "1/2/1955", "31/8/2024",
         ErrorMessage = "Value for {0} must be between {1} and {2}")]
         public DateOnly Fecha { get; set; }
         public long IdCliente {  get; set; }

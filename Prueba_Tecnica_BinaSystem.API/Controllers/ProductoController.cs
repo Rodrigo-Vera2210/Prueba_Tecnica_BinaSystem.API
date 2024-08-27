@@ -19,6 +19,8 @@ namespace Prueba_Tecnica_BinaSystem.API.Controllers
         }
 
         [HttpPost("Crear")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CrearProducto(ProductoDTO producto)
         {
             if (ModelState.IsValid)
@@ -33,6 +35,9 @@ namespace Prueba_Tecnica_BinaSystem.API.Controllers
         }
 
         [HttpGet("Lista")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Lista([FromQuery] string? searchTerm)
         {
             try
@@ -41,16 +46,18 @@ namespace Prueba_Tecnica_BinaSystem.API.Controllers
                 
                 if (result != null) return Ok(result);
                 
-                return BadRequest(result);
+                return NotFound();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpGet("Detalle/{id:long}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Obtener(long id)
         {
             try
@@ -61,9 +68,9 @@ namespace Prueba_Tecnica_BinaSystem.API.Controllers
 
                 return NotFound();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(ex.Message);
             }
         }
     }

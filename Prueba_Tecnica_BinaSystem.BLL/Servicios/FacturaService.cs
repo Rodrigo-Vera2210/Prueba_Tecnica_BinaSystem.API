@@ -67,7 +67,7 @@ namespace Prueba_Tecnica_BinaSystem.BLL.Servicios
                 if (facturaEncontrado == null) throw new TaskCanceledException("Factura no encontrada");
 
                 Factura factura = await facturaEncontrado.Include(detalle => detalle.Detalles)
-                    .ThenInclude(p => p.Producto).FirstAsync();
+                    .ThenInclude(p => p.Producto).Include(c => c.Cliente).FirstAsync();
 
                 return _mapper.Map<ReporteFacturaDTO>(factura);
             }

@@ -204,5 +204,24 @@ namespace Prueba_Tecnica_BinaSystem.View.Services
             }
             return null;
         }
+
+        public async Task<ReporteFactura> DetalleFactura(string access, string id)
+        {
+            var cliente = new HttpClient();
+            ReporteFactura resultado = null;
+            cliente.BaseAddress = new Uri(_urlBase);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access);
+
+            var response = await cliente.GetAsync($"api/factura/detalle/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json_response = await response.Content.ReadAsStringAsync();
+
+                resultado = JsonConvert.DeserializeObject<ReporteFactura>(json_response);
+            }
+
+            return resultado;
+        }
     }
 }

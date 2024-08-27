@@ -56,7 +56,7 @@ namespace Prueba_Tecnica_BinaSystem.View.Controllers
 
             factura.Detalles = facturaMemoria.Detalles;
 
-            if(factura.Fecha < DateOnly.FromDateTime(DateTime.Now)){
+            if(factura.Fecha <= DateOnly.FromDateTime(DateTime.Now)){
                 var response = await _serviceAPI.CrearFactura(factura, result);
                 if (response != null)
                 {
@@ -64,6 +64,11 @@ namespace Prueba_Tecnica_BinaSystem.View.Controllers
                     return Redirect("ListaFacturas");
                 }
             }
+            var clientes = await _serviceAPI.ObtenerClientes(result, null);
+            var productos = await _serviceAPI.ObtenerProductos(result);
+
+            factura.Clientes = new SelectList(clientes, "IdCliente", "Nombre");
+            factura.Productos = new SelectList(productos, "IdProducto", "Descripcion");
             return View(factura);
         }
 
@@ -195,6 +200,18 @@ namespace Prueba_Tecnica_BinaSystem.View.Controllers
             if (reponse == null) return View();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> DetalleFactura(long id)
+        {
+            var result = HttpContext.Session.GetString("access");
+            if (result == null)
+            {
+                return this.RedirectToAction("Login", "Usuario");
+            }
+            ReporteFactura factura = await _serviceAPI.DetalleFactura(result , id.ToString());
+
+            return View(factura);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

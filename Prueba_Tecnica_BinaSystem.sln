@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prueba_Tecnica_BinaSystem.B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prueba_Tecnica_BinaSystem.Utility", "Prueba_Tecnica_BinaSystem.Utility\Prueba_Tecnica_BinaSystem.Utility.csproj", "{3EFF7790-D55C-4420-AAD4-6CF79C24F3FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prueba_Tecnica_BinaSystem.View", "Prueba_Tecnica_BinaSystem.View\Prueba_Tecnica_BinaSystem.View.csproj", "{58714205-1539-40C8-8814-F19AEBDD606A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prueba_Tecnica_BinaSystem.View", "Prueba_Tecnica_BinaSystem.View\Prueba_Tecnica_BinaSystem.View.csproj", "{58714205-1539-40C8-8814-F19AEBDD606A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -13,5 +13,6 @@ namespace Prueba_Tecnica_BinaSystem.View.Services
         Task<List<Cliente>> ObtenerClientes(string access, string term);
         Task<Cliente> ObtenerCliente(string access, string id);
         Task<Producto> ObtenerProducto(string access, string id);
+        Task<ReporteFactura> DetalleFactura(string access, string id);
     }
 }

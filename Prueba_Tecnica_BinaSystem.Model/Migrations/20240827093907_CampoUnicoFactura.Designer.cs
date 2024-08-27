@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Prueba_Tecnica_BinaSystem.Model;
 
@@ -11,9 +12,11 @@ using Prueba_Tecnica_BinaSystem.Model;
 namespace Prueba_Tecnica_BinaSystem.Model.Migrations
 {
     [DbContext(typeof(Prueba_Tecnica_BinaSystem_Context))]
-    partial class Prueba_Tecnica_BinaSystem_ContextModelSnapshot : ModelSnapshot
+    [Migration("20240827093907_CampoUnicoFactura")]
+    partial class CampoUnicoFactura
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

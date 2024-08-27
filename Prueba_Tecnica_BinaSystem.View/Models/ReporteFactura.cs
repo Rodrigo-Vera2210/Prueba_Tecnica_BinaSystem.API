@@ -23,6 +23,7 @@ namespace Prueba_Tecnica_BinaSystem.View.Models
         public decimal TotalIVA { get; set; }
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Total { get; set; }
+        public virtual Cliente Cliente { get; set; } = null!;
         public ICollection<ReporteDetalle> Detalles { get; set; } = null!; 
 
     }

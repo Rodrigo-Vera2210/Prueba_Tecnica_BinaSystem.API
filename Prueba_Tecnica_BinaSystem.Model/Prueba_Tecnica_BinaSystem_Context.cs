@@ -27,6 +27,10 @@ namespace Prueba_Tecnica_BinaSystem.Model
                 .WithOne(a => a.Factura)
                 .HasForeignKey(a => a.IdFactura);
 
+            modelBuilder.Entity<Factura>()
+                .HasIndex(c => c.NumeroFactura)
+                .IsUnique();
+
             modelBuilder.Entity<Cliente>()
                 .HasMany(c => c.Facturas)
                 .WithOne(a => a.Cliente)

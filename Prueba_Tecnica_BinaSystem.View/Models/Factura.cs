@@ -15,15 +15,15 @@ namespace Prueba_Tecnica_BinaSystem.View.Models
         [Key]
         public long IdFactura { get; set; }
         [Required]
-        [Length(3, 3, ErrorMessage = "El codigo debe tener 3 digitos")]
+        [Length(3, 3, ErrorMessage = "El establecimiento debe tener 3 digitos")]
         public string Establecimiento { get; set; } = null!;
         [Required]
-        [Length(3, 3, ErrorMessage = "El codigo debe tener 3 digitos")]
+        [Length(3, 3, ErrorMessage = "El punto de emision debe tener 3 digitos")]
         public string PuntoEmision { get; set; } = null!;
         [Required]
-        [Length(8, 8, ErrorMessage = "El codigo debe tener 8 digitos")]
+        [Length(8, 8, ErrorMessage = "El numero de factura debe tener 8 digitos")]
         public string NumeroFactura { get; set; } = null!;
-        [Range(typeof(DateTime), "1/2/1955", "31/8/2024",
+        [Range(typeof(DateOnly), "1/2/1955", "31/8/2024",
         ErrorMessage = "Value for {0} must be between {1} and {2}")]
         public DateOnly Fecha { get; set; }
         public long IdCliente {  get; set; }

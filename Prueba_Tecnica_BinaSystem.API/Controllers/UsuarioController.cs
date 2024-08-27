@@ -11,19 +11,19 @@ namespace Prueba_Tecnica_BinaSystem.API.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly IUsuarioService _usuarioService;
         private readonly IMapper _mapper;
 
-        public UsuarioController(IConfiguration config, IUsuarioService usuarioService, IMapper mapper)
+        public UsuarioController(IUsuarioService usuarioService, IMapper mapper)
         {
-            _config = config;
             _usuarioService = usuarioService;
             _mapper = mapper;
         }
 
         [AllowAnonymous]
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login([FromBody] UsuarioDTO usuario)
         {
             IActionResult response = Unauthorized();

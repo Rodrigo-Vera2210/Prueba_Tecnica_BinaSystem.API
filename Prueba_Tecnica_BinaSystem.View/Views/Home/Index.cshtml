@@ -138,7 +138,6 @@
         IdProducto = 0;
         $(function () {
             const model = JSON.parse('@Json.Serialize(Model)')
-            console.log(model)
 
             $('#selectCliente').select2();
 
@@ -171,7 +170,6 @@
                     data: { id: IdProducto },
                     dataType: "json",
                     success: (data) => {
-                        console.log(data.codigo)
                         document.getElementById("codigoProducto").innerHTML = data.codigo
                         document.getElementById("nombreProducto").innerHTML = data.descripcion
                     },
@@ -188,8 +186,6 @@
                 subtotal = precio * cantidad
                 iva = subtotal * 0.15;
 
-                console.log(subtotal)
-                console.log($("#Subtotal").text())
                 if ($("#Subtotal").text() != ''){
                     subtotalF = parseFloat($("#Subtotal").text()) + subtotal
                     ivaF = parseFloat($("#Iva").text()) + iva
@@ -211,14 +207,6 @@
                 $("#txtPrice").val("");
             });
             
-            function Remove(button) {
-                var row = $(button).closest("TR");
-                var name = $("TD", row).eq(0).html();
-                if (confirm("Do you want to delete item : " + name)) {
-                    var table = $("#tblItems")[0];
-                    table.deleteRow(row[0].rowIndex);
-                }
-            };
 
             function AddRow(codigo, name, precio, qty, unidad, iva, subtotal ) {
                 var tBody = $("#tblItems > TBODY")[0];
@@ -254,12 +242,6 @@
                 cell = $(row.insertCell(-1));
                 cell.html(subtotal);
 
-                //Add Button cell.
-                cell = $(row.insertCell(-1));
-                var btnRemove = $("<a>Remove</a>");
-                btnRemove.attr("href", "#");
-                btnRemove.attr("onclick", "Remove(this);");
-                cell.append(btnRemove);
             };
 
             function AddDetalle(id, precio, qty, unidad) {
